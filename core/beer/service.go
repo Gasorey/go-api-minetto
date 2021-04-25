@@ -23,7 +23,7 @@ type UseCase interface {
 	Writer
 }
 
-type Service struct{
+type Service struct {
 	DB *sql.DB
 }
 
@@ -48,7 +48,7 @@ func (s *Service) GetAll() ([]*Beer, error) {
 
 	for rows.Next() {
 		var b Beer
-		err =  rows.Scan(&b.ID, &b.Name, &b.Style, &b.Type)
+		err = rows.Scan(&b.ID, &b.Name, &b.Style, &b.Type)
 		if err != nil {
 			return nil, err
 		}
@@ -81,7 +81,7 @@ func (s *Service) Store(b *Beer) error {
 	}
 
 	stmt, err := tx.Prepare("insert into beer(id, name, type, style) values (?,?,?,?)")
-	if err := nil {
+	if err != nil {
 		return err
 	}
 	defer stmt.Close()
@@ -119,8 +119,6 @@ func (s *Service) Update(b *Beer) error {
 	return nil
 }
 
-
-
 func (s *Service) Remove(ID int64) error {
 	if ID == 0 {
 		return fmt.Errorf("Invalid ID")
@@ -137,8 +135,8 @@ func (s *Service) Remove(ID int64) error {
 		return err
 	}
 
-	_, err := tx.Exec(ID)
-	if err != nil{
+	_, err = stmt.Exec(ID)
+	if err != nil {
 		tx.Rollback()
 		return err
 	}
