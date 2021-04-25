@@ -11,10 +11,11 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gasorey/go-api-minetto/core/beer"
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "data.beer.db")
+	db, err := sql.Open("sqlite3", "data/beer.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,19 +25,20 @@ func main() {
 
 	r := mux.NewRouter()
 
-	n := negroni.new(
+	n := negroni.New(
 		negroni.NewLogger(),
 	)
+
 	r.Handle("/v1/beer", n.With(
 		negroni.Wrap(hello(service)),
-	)).Method("GET", "OPTIONS")
+	)).Methods("GET", "OPTIONS")
 	http.Handle("/", r)
 
 	logger := log.New(os.Stderr, "logger: ", log.Lshortfile)
 	srv := &http.Server{
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
-		Addr:         "4000",
+		Addr:         ":4000",
 		Handler:      http.DefaultServeMux,
 		ErrorLog:     logger,
 	}
