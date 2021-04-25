@@ -17,7 +17,7 @@ func main() {
 
 func say(what string) (bool, error) {
 	if what == "" {
-		return false, fmt.Errorf("Empty String")
+		return false, fmt.Errorf("empty string")
 	}
 	fmt.Println(what)
 	return true, nil
